@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center">Welcome, {{ username }}</h2>
+
+  {% if marks %}
+    <h4 class="mt-4">📋 Your Marks:</h4>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Subject</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for subject, score in marks %}
+        <tr>
+          <td>{{ subject }}</td>
+          <td>{{ score }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h4 class="mt-5">📊 Marks Chart:</h4>
+    <canvas id="marksChart" width="400" height="200"></canvas>
+  {% else %}
+    <div class="alert alert-warning mt-4">No marks found.</div>
+  {% endif %}
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if marks %}
+<script>
+  const ctx = document.getElementById('marksChart').getContext('2d');
+  const marksChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ subjects | tojson | safe }},
+      datasets: [{
+        label: 'Score',
+        data: {{ scores | tojson | safe }},
+        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100
+        }
+      }
+    }
+  });
+</script>
+{% endif %}
+{% endblock %}
