@@ -4,3 +4,6 @@ opencv-python
 pillow
 python-dotenv
 google-generativeai
+gunicorn
+
+
